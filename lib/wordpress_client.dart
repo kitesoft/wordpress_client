@@ -3,4 +3,5 @@
 /// More dartdocs go here.
 library wordpress_client;
 
-export 'src/api.dart';
+export 'src/models/category.dart';
+export 'src/client.dart';

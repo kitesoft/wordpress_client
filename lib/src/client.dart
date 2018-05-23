@@ -4,23 +4,40 @@ import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:logging/logging.dart';
 
+import 'models/category.dart';
+
 typedef void APIErrorHandler(String endpoint, int statusCode, String response);
 
-class API {
+class WordpressClient {
   final Logger _logger = new Logger('API');
 
   String _baseURL;
   Client _client;
   APIErrorHandler _errorHandler;
 
-  API(this._baseURL, this._client, [this._errorHandler = null]);
+  WordpressClient(this._baseURL, this._client, [this._errorHandler = null]);
 
   /// Get all available posts.
-  Future<List<Map>> getPosts() async {
+  Future<List<Map>> listPosts() async {
     String _endpoint = '/wp/v2/posts';
 
     List<Map> postMaps = await _get(_endpoint);
     return postMaps;
+  }
+
+  /// Get all available categories.
+  Future<List<Category>> listCategories() async {
+    String _endpoint = '/wp/v2/categories';
+
+    // Retrieve the data
+    List<Map> categoryMaps = await _get(_endpoint);
+
+    List<Category> categories = new List();
+    categories = categoryMaps
+        .map((categoryMap) => new Category.fromMap(categoryMap))
+        .toList();
+
+    return categories;
   }
 
   _handleError(String endpoint, int statusCode, String response) {
@@ -30,7 +47,8 @@ class API {
       return;
     }
 
-    _logger.log(Level.SEVERE, "Received $statusCode from '$endpoint' => $response");
+    _logger.log(
+        Level.SEVERE, "Received $statusCode from '$endpoint' => $response");
   }
 
   Future _get(String url) async {

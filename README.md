@@ -3,6 +3,8 @@
 This is intended to be a convenience package for using a Wordpress backend
 as a CMS for various Dart-enabled client applications (web, server, Flutter, etc.)
 
+https://developer.wordpress.org/rest-api/
+
 ## Usage
 
 <!-- A simple usage example:
