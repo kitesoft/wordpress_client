@@ -37,10 +37,10 @@ class Post {
   String password;
 
   /// The title for the object.
-  dynamic title;
+  Map title;
 
   /// The content for the object.
-  dynamic content;
+  Map content;
 
   /// The ID for the author of the object
   int author;

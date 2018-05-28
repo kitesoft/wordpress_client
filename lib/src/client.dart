@@ -19,8 +19,18 @@ class WordpressClient {
   WordpressClient(this._baseURL, this._client, [this._errorHandler = null]);
 
   /// Get all available posts.
-  Future<List<Post>> listPosts() async {
+  Future<List<Post>> listPosts({List<int> categoryIDs: null}) async {
     String _endpoint = '/wp/v2/posts';
+
+    // Build query string
+    String queryString = '';
+    if (categoryIDs != null && categoryIDs.length > 0) {
+      queryString =
+          _addParamToQueryString(queryString, 'categories', categoryIDs.join(','));
+    }
+
+    // Append the query string
+    _endpoint += queryString;
 
     // Retrieve the data
     List<Map> postMaps = await _get(_endpoint);
@@ -51,7 +61,6 @@ class WordpressClient {
 
     // Append the query string
     _endpoint += queryString;
-    print(_endpoint);
 
     // Retrieve the data
     List<Map> categoryMaps = await _get(_endpoint);
@@ -116,7 +125,7 @@ class WordpressClient {
       queryString += '&';
     }
 
-    // TODO URLEncode
+    // TODO URL encode
     queryString += '$key=$value';
 
     return queryString;

@@ -19,6 +19,8 @@ void main() {
 
       expect(categories, isList);
       expect(categories[0], new isInstanceOf<Category>());
+
+      // TODO: Tests for hideEmpty and excludeIDs
     });
 
     test('Get posts', () async {
@@ -26,6 +28,8 @@ void main() {
 
       expect(posts, isList);
       expect(posts[0], new isInstanceOf<Post>());
+
+      // TODO: Test for posts with a slug
     });
   });
 }
