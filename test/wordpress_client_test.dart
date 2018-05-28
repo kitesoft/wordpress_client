@@ -1,7 +1,8 @@
 import 'package:http/http.dart' as http;
 import 'package:test/test.dart';
 import 'package:wordpress_client/src/client.dart';
-import 'package:wordpress_client/wordpress_client.dart';
+import 'package:wordpress_client/src/models/category.dart';
+import 'package:wordpress_client/src/models/post.dart';
 
 void main() {
   final String _baseURL = 'http://wpdart.silverbirchstudios.com/index.php/wp-json';
@@ -21,7 +22,10 @@ void main() {
     });
 
     test('Get posts', () async {
-      expect(await client.listPosts(), isList);
+      List<Post> posts = await client.listPosts();
+
+      expect(posts, isList);
+      expect(posts[0], new isInstanceOf<Post>());
     });
   });
 }
