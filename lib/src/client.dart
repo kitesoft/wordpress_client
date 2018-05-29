@@ -87,6 +87,30 @@ class WordpressClient {
     return posts;
   }
 
+  /// Get post
+  Future<Post> getPost(int postID, {bool injectObjects: false}) async {
+    if (postID == null) {
+      return null;
+    }
+
+    String _endpoint = '/wp/v2/posts/$postID';
+
+    // Retrieve the data
+    Map postMap = await _get(_endpoint);
+    if (postMap == null) {
+      return null;
+    }
+
+    Post p = new Post.fromMap(postMap);
+    if (injectObjects) {
+      if (p.featuredMediaID != null && p.featuredMediaID > 0) {
+        p.featuredMedia = await getMedia(p.featuredMediaID);
+      }
+    }
+
+    return p;
+  }
+
   /// Get media item
   Future<Media> getMedia(int mediaID) async {
     if (mediaID == null) {

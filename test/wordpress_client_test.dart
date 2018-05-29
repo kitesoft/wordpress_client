@@ -37,6 +37,16 @@ void main() {
       // TODO: Test for posts with a slug
     });
 
+    test('Get post', () async {
+      final int postID = 5;
+      Post post = await client.getPost(postID);
+
+      expect(post.id, isNotNull);
+      expect(post, new isInstanceOf<Post>());
+
+      // TODO: Test for posts with a slug
+    });
+
     test('Get media', () async {
       final int mediaID = 12;
       Media media = await client.getMedia(mediaID);
