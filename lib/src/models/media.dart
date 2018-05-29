@@ -79,23 +79,26 @@ class Media {
   /// URL to the original attachment file.
   String sourceURL;
 
+  /// Convenience method to retrieve thumbnail URL
+  String get featuredMediaURLThumbnail => _featuredMediaURLThumbnail();
+
+  /// Convenience method to retrieve medium URL
+  String get featuredMediaURLMedium => _featuredMediaURLMedium();
+
+  /// Convenience method to retrieve large URL
+  String get featuredMediaURLLarge => _featuredMediaURLLarge();
+
   Media.fromMap(Map<String, dynamic> map) {
     if (map == null) {
       return;
     }
 
-    date = map["date"] != null
-        ? DateTime.parse(map["date"])
-        : null;
-    dateGMT = map["date_gmt"] != null
-        ? DateTime.parse(map["date_gmt"])
-        : null;
+    date = map["date"] != null ? DateTime.parse(map["date"]) : null;
+    dateGMT = map["date_gmt"] != null ? DateTime.parse(map["date_gmt"]) : null;
     guid = map['guid'];
     id = map['id'];
     link = map['link'];
-    modified = map["modified"] != null
-        ? DateTime.parse(map["modified"])
-        : null;
+    modified = map["modified"] != null ? DateTime.parse(map["modified"]) : null;
     modifiedGMT = map["modified_gmt"] != null
         ? DateTime.parse(map["modified_gmt"])
         : null;
@@ -119,32 +122,67 @@ class Media {
   }
 
   Map<String, dynamic> toMap() => {
-    'date': date?.toIso8601String(),
-    'date_gmt': dateGMT?.toIso8601String(),
-    'guid': guid,
-    'id': id,
-    'link': link,
-    'modified': modified?.toIso8601String(),
-    'modified_gmt': modifiedGMT?.toIso8601String(),
-    'slug': slug,
-    'status': status,
-    'type': type,
-    'title': title,
-    'author': author,
-    'comment_status': commentStatus,
-    'ping_status': pingStatus,
-    'meta': meta,
-    'template': template,
-    'alt_text': altText,
-    'caption': caption,
-    'description': description,
-    'media_type': mediaType,
-    'mime_type': mimeType,
-    'media_details': mediaDetails,
-    'post': post,
-    'source_url': sourceURL
-  };
+        'date': date?.toIso8601String(),
+        'date_gmt': dateGMT?.toIso8601String(),
+        'guid': guid,
+        'id': id,
+        'link': link,
+        'modified': modified?.toIso8601String(),
+        'modified_gmt': modifiedGMT?.toIso8601String(),
+        'slug': slug,
+        'status': status,
+        'type': type,
+        'title': title,
+        'author': author,
+        'comment_status': commentStatus,
+        'ping_status': pingStatus,
+        'meta': meta,
+        'template': template,
+        'alt_text': altText,
+        'caption': caption,
+        'description': description,
+        'media_type': mediaType,
+        'mime_type': mimeType,
+        'media_details': mediaDetails,
+        'post': post,
+        'source_url': sourceURL
+      };
 
   toString() => "Media => " + toMap().toString();
-}
 
+  String _featuredMediaURLThumbnail() {
+    // Make sure we have what we need
+    if (mediaDetails == null ||
+        mediaDetails['sizes'] == null ||
+        mediaDetails['sizes']['thumbnail'] == null) {
+      return null;
+    }
+
+    Map thumbnail = mediaDetails['sizes']['thumbnail'];
+    return thumbnail['source_url'];
+  }
+
+  String _featuredMediaURLMedium() {
+    // Make sure we have what we need
+    if (mediaDetails == null ||
+        mediaDetails['sizes'] == null ||
+        mediaDetails['sizes']['medium'] == null) {
+      return null;
+    }
+
+    Map medium = mediaDetails['sizes']['medium'];
+    return medium['source_url'];
+  }
+
+  String _featuredMediaURLLarge() {
+    // Make sure we have what we need
+    if (mediaDetails == null ||
+        mediaDetails['sizes'] == null ||
+        mediaDetails['sizes']['large'] == null) {
+      return null;
+    }
+
+    Map large = mediaDetails['sizes']['large'];
+    return large['source_url'];
+  }
+}
