@@ -1,14 +1,14 @@
-import 'category.dart';
+import 'media.dart';
 
 class Post {
   /// The date the object was published, in the site's timezone.
   DateTime date;
 
   /// The date the object was published, as GMT.
-  DateTime date_gmt;
+  DateTime dateGMT;
 
   /// The globally unique identifier for the object.
-  dynamic guid;
+  Map guid;
 
   /// Unique identifier for the object.
   int id;
@@ -20,7 +20,7 @@ class Post {
   DateTime modified;
 
   /// The date the object was last modified, as GMT.
-  DateTime modified_gmt;
+  DateTime modifiedGMT;
 
   /// An alphanumeric identifier for the object unique to its type.
   String slug;
@@ -46,20 +46,20 @@ class Post {
   int author;
 
   /// The excerpt for the object.
-  dynamic excerpt;
+  Map excerpt;
 
   /// The ID of the featured media for the object.
-  int featured_media;
+  int featuredMediaID;
 
   /// Whether or not comments are open on the object
   ///
   /// One of: open, closed
-  String comment_status;
+  String commentStatus;
 
   /// Whether or not the object can be pinged.
   ///
   /// One of: open, close
-  String ping_status;
+  String pingStatus;
 
   /// The format for the object.
   String format;
@@ -74,10 +74,13 @@ class Post {
   String template;
 
   /// The terms assigned to the object in the category taxonomy.
-  List<Category> categories;
+  List<int> categories;
 
   /// The terms assigned to the object in the post_tag taxonomy.
   List tags;
+
+  // Injected objects
+  Media featuredMedia;
 
   Post.fromMap(Map<String, dynamic> map) {
     if (map == null) {
@@ -87,7 +90,7 @@ class Post {
     date = map["date"] != null
         ? DateTime.parse(map["date"])
         : null;
-    date_gmt = map["date_gmt"] != null
+    dateGMT = map["date_gmt"] != null
         ? DateTime.parse(map["date_gmt"])
         : null;
     guid = map['guid'];
@@ -96,7 +99,7 @@ class Post {
     modified = map["modified"] != null
         ? DateTime.parse(map["modified"])
         : null;
-    modified_gmt = map["modified_gmt"] != null
+    modifiedGMT = map["modified_gmt"] != null
         ? DateTime.parse(map["modified_gmt"])
         : null;
     slug = map['slug'];
@@ -107,9 +110,9 @@ class Post {
     content = map['content'];
     author = map['author'];
     excerpt = map['excerpt'];
-    featured_media = map['featured_media'];
-    comment_status = map['comment_status'];
-    ping_status = map['ping_status'];
+    featuredMediaID = map['featured_media'];
+    commentStatus = map['comment_status'];
+    pingStatus = map['ping_status'];
     format = map['format'];
     meta = map['meta'];
     sticky = map['sticky'];
@@ -120,12 +123,12 @@ class Post {
 
   Map<String, dynamic> toMap() => {
         'date': date?.toIso8601String(),
-        'date_gmt': date_gmt?.toIso8601String(),
+        'date_gmt': dateGMT?.toIso8601String(),
         'guid': guid,
         'id': id,
         'link': link,
         'modified': modified?.toIso8601String(),
-        'modified_gmt': modified_gmt?.toIso8601String(),
+        'modified_gmt': modifiedGMT?.toIso8601String(),
         'slug': slug,
         'status': status,
         'type': type,
@@ -134,9 +137,9 @@ class Post {
         'content': content,
         'author': author,
         'excerpt': excerpt,
-        'featured_media': featured_media,
-        'comment_status': comment_status,
-        'ping_status': ping_status,
+        'featured_media': featuredMediaID,
+        'comment_status': commentStatus,
+        'ping_status': pingStatus,
         'format': format,
         'meta': meta,
         'sticky': sticky,

@@ -5,6 +5,7 @@ import 'package:http/http.dart';
 import 'package:logging/logging.dart';
 
 import 'models/category.dart';
+import 'models/media.dart';
 import 'models/post.dart';
 
 typedef void APIErrorHandler(String endpoint, int statusCode, String response);
@@ -17,29 +18,6 @@ class WordpressClient {
   APIErrorHandler _errorHandler;
 
   WordpressClient(this._baseURL, this._client, [this._errorHandler = null]);
-
-  /// Get all available posts.
-  Future<List<Post>> listPosts({List<int> categoryIDs: null}) async {
-    String _endpoint = '/wp/v2/posts';
-
-    // Build query string
-    String queryString = '';
-    if (categoryIDs != null && categoryIDs.length > 0) {
-      queryString =
-          _addParamToQueryString(queryString, 'categories', categoryIDs.join(','));
-    }
-
-    // Append the query string
-    _endpoint += queryString;
-
-    // Retrieve the data
-    List<Map> postMaps = await _get(_endpoint);
-
-    List<Post> posts = new List();
-    posts = postMaps.map((postMap) => new Post.fromMap(postMap)).toList();
-
-    return posts;
-  }
 
   /// Get all available categories.
   ///
@@ -71,6 +49,59 @@ class WordpressClient {
         .toList();
 
     return categories;
+  }
+
+  /// Get all available posts.
+  ///
+  /// If [categoryIDs] list is provided then only posts within those categories
+  /// will be returned. Use [injectObjects] to have full objects injected
+  /// rather than just the object ID (i.e. a posts's featured media)
+  Future<List<Post>> listPosts(
+      {List<int> categoryIDs: null, bool injectObjects: false}) async {
+    String _endpoint = '/wp/v2/posts';
+
+    // Build query string
+    String queryString = '';
+    if (categoryIDs != null && categoryIDs.length > 0) {
+      queryString = _addParamToQueryString(
+          queryString, 'categories', categoryIDs.join(','));
+    }
+
+    // Append the query string
+    _endpoint += queryString;
+
+    // Retrieve the data
+    List<Map> postMaps = await _get(_endpoint);
+
+    List<Post> posts = new List();
+    posts = postMaps.map((postMap) => new Post.fromMap(postMap)).toList();
+
+    if (injectObjects) {
+      for (Post p in posts) {
+        if (p.featuredMediaID != null && p.featuredMediaID > 0) {
+          p.featuredMedia = await getMedia(p.featuredMediaID);
+        }
+      }
+    }
+
+    return posts;
+  }
+
+  /// Get media item
+  Future<Media> getMedia(int mediaID) async {
+    if (mediaID == null) {
+      return null;
+    }
+
+    String _endpoint = '/wp/v2/media/$mediaID';
+
+    // Retrieve the data
+    Map mediaMap = await _get(_endpoint);
+    if (mediaMap == null) {
+      return null;
+    }
+
+    return new Media.fromMap(mediaMap);
   }
 
   _handleError(String endpoint, int statusCode, String response) {

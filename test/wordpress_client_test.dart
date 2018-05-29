@@ -3,6 +3,7 @@ import 'package:test/test.dart';
 import 'package:wordpress_client/src/client.dart';
 import 'package:wordpress_client/src/models/category.dart';
 import 'package:wordpress_client/src/models/post.dart';
+import 'package:wordpress_client/wordpress_client.dart';
 
 void main() {
   final String _baseURL = 'http://wpdart.silverbirchstudios.com/index.php/wp-json';
@@ -28,6 +29,20 @@ void main() {
 
       expect(posts, isList);
       expect(posts[0], new isInstanceOf<Post>());
+
+      // Now check the featured media injection
+      posts = await client.listPosts(injectObjects: true);
+      expect(posts[0].featuredMedia, new isInstanceOf<Media>());
+
+      // TODO: Test for posts with a slug
+    });
+
+    test('Get media', () async {
+      final int mediaID = 12;
+      Media media = await client.getMedia(mediaID);
+
+      expect(media.id, isNotNull);
+      expect(media, new isInstanceOf<Media>());
 
       // TODO: Test for posts with a slug
     });
