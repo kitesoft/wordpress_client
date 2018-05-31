@@ -6,4 +6,5 @@ library wordpress_client;
 export 'src/models/category.dart';
 export 'src/models/media.dart';
 export 'src/models/post.dart';
+export 'src/models/settings.dart';
 export 'src/client.dart';
