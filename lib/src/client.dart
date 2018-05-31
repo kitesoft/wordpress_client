@@ -57,7 +57,7 @@ class WordpressClient {
   /// will be returned. Use [injectObjects] to have full objects injected
   /// rather than just the object ID (i.e. a posts's featured media)
   Future<List<Post>> listPosts(
-      {List<int> categoryIDs: null, bool injectObjects: false}) async {
+      {List<int> categoryIDs: null, bool injectObjects: true}) async {
     String _endpoint = '/wp/v2/posts';
 
     // Build query string
@@ -76,6 +76,7 @@ class WordpressClient {
     List<Post> posts = new List();
     posts = postMaps.map((postMap) => new Post.fromMap(postMap)).toList();
 
+    // Inject objects if requested
     if (injectObjects) {
       for (Post p in posts) {
         if (p.featuredMediaID != null && p.featuredMediaID > 0) {
@@ -88,7 +89,7 @@ class WordpressClient {
   }
 
   /// Get post
-  Future<Post> getPost(int postID, {bool injectObjects: false}) async {
+  Future<Post> getPost(int postID, {bool injectObjects: true}) async {
     if (postID == null) {
       return null;
     }
@@ -102,6 +103,8 @@ class WordpressClient {
     }
 
     Post p = new Post.fromMap(postMap);
+
+    // Inject objects if requested
     if (injectObjects) {
       if (p.featuredMediaID != null && p.featuredMediaID > 0) {
         p.featuredMedia = await getMedia(p.featuredMediaID);
