@@ -117,8 +117,15 @@ class Post {
     meta = map['meta'];
     sticky = map['sticky'];
     template = map['template'];
-    categories = map['categories'];
     tags = map['tags'];
+
+    // Avoiding (odd) cast warnings
+    categories = new List();
+    for (dynamic item in map['categories']) {
+      if (item is int) {
+        categories.add(item);
+      }
+    }
   }
 
   Map<String, dynamic> toMap() => {
