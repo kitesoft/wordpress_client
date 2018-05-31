@@ -34,6 +34,9 @@ void main() {
       posts = await client.listPosts(injectObjects: true);
       expect(posts[0].featuredMedia, new isInstanceOf<Media>());
 
+      // Pagination
+      posts = await client.listPosts(perPage: 2);
+      expect(posts.length, equals(2));
       // TODO: Test for posts with a slug
     });
 

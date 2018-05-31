@@ -55,13 +55,22 @@ class WordpressClient {
   ///
   /// If [categoryIDs] list is provided then only posts within those categories
   /// will be returned. Use [injectObjects] to have full objects injected
-  /// rather than just the object ID (i.e. a posts's featured media)
+  /// rather than just the object ID (i.e. a posts's featured media). The [page]
+  /// and [perPage] parameters allow for pagination.
   Future<List<Post>> listPosts(
-      {List<int> categoryIDs: null, bool injectObjects: true}) async {
+      {List<int> categoryIDs: null,
+      bool injectObjects: true,
+      int page: 1,
+      int perPage: 10}) async {
     String _endpoint = '/wp/v2/posts';
 
-    // Build query string
+    // Build query string starting with pagination
     String queryString = '';
+    queryString = _addParamToQueryString(queryString, 'page', page.toString());
+    queryString =
+        _addParamToQueryString(queryString, 'per_page', perPage.toString());
+
+    // If category IDs were sent, limit to those
     if (categoryIDs != null && categoryIDs.length > 0) {
       queryString = _addParamToQueryString(
           queryString, 'categories', categoryIDs.join(','));
